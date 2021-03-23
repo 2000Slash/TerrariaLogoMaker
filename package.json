@@ -1,0 +1,22 @@
+{
+  "name": "terrarialogomaker",
+  "version": "1.0.0",
+  "description": "Terraria-Logo-Maker-2. This is just a wrapper around https://github.com/darthmorf/Terraria-Logo-Maker-2.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2000Slash/TerrariaLogoMaker2Module.git"
+  },
+  "keywords": [],
+  "author": "Nils Hartmann",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.7.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0"
+  }
+}

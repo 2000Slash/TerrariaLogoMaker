@@ -1,0 +1,1 @@
+Pretty much a copy of [https://github.com/darthmorf/Terraria-Logo-Maker-2](https://github.com/darthmorf/Terraria-Logo-Maker-2) but as a node module.
