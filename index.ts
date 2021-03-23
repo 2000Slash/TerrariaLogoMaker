@@ -1,19 +1,19 @@
-const { createCanvas, Image } = require('canvas');
-const path = require("path");
+import { createCanvas, loadImage,  Image } from 'canvas';
+import * as path from "path";
 
 var canvas = createCanvas(0, 95);
 var ctx = canvas.getContext("2d");
 
-var imageDir = path.join(__dirname, "./assets/chars");
-var theme;
-var treeImg;
-var startImg;
-var endImg;
+let imageDir = path.join(__dirname, "../assets/chars");
+let theme: String;
+let treeImg: Image;
+let startImg: Image;
+let endImg: Image;
 
 
 loadTheme('overworld-extended');
 
-function loadTheme (newTheme){
+function loadTheme (newTheme: String){
     theme = newTheme;
     treeImg = new Image();
     treeImg.src = `${imageDir}/${theme}/tree.png`;
@@ -25,7 +25,7 @@ function loadTheme (newTheme){
     endImg.src = `${imageDir}/${theme}/end.png`;
 }
 
-function displayImage (images, drawTree) {
+function displayImage (images:Image[], drawTree:Boolean) {
     if (drawTree){
         images = [treeImg, startImg].concat(images, [endImg]);
     }
@@ -49,27 +49,20 @@ function displayImage (images, drawTree) {
     }    
 }
 
-function stringToImage (text, drawTree, charImages=[]) {
+async function stringToImage (text: String, charImages:Image[]=[]): Promise<Image[]> {
     if (text.length == 0) {
-        displayImage(charImages, drawTree);
-        return;
+        return charImages;
     }
     var asciiVal = text[0].charCodeAt(0);    
     var imagePath = `${imageDir}/${theme}/${asciiVal}.png`;
-    var img = new Image();
-    img.onerror = function () {
-        img.onload = null;
-        stringToImage(text.slice(1, text.length), drawTree, charImages);
-    }
-    img.onload = function () {
-        charImages.push(img);
-        stringToImage(text.slice(1, text.length), drawTree, charImages);
-    }   
-    img.src = imagePath;
+    const image = await loadImage(imagePath);
+    charImages.push(image);
+    return await stringToImage(text.slice(1, text.length), charImages);
 }
 
-module.exports = function createLogo(text, drawTree) {
-    stringToImage(text, drawTree);
+export async function createLogo(text: String, drawTree: Boolean): Promise<Buffer> {
+    const images = await stringToImage(text);
+    displayImage(images, drawTree);
     var dataURL = canvas.toDataURL('image/png');
     var data = dataURL.replace(/^data:image\/\w+;base64,/, "");
     return Buffer.from(data, 'base64');
